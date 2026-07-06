@@ -81,10 +81,12 @@ class OllamaService:
             
         # Check if requested model exists locally
         available_models = cls.get_available_models()
-        if not available_models or model not in available_models:
-            # Check fallback model
-            if settings.FALLBACK_MODEL in available_models:
-                model = settings.FALLBACK_MODEL
+        if available_models:
+            if model not in available_models:
+                if settings.FALLBACK_MODEL in available_models:
+                    model = settings.FALLBACK_MODEL
+                else:
+                    model = available_models[0]
 
         # Determine running mode
         ollama_active = cls.is_ollama_running() and len(available_models) > 0
@@ -107,6 +109,8 @@ class OllamaService:
                 # Optimize Ollama CPU priority on Windows to prevent OS lag or crashes under heavy CPU load
                 set_ollama_priority_below_normal()
                 response = requests.post(url, json=payload, stream=True, timeout=60)
+                if response.status_code != 200:
+                    raise Exception(f"Ollama returned status code {response.status_code}")
                 for line in response.iter_lines():
                     if line:
                         chunk = json.loads(line.decode('utf-8'))
