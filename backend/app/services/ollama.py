@@ -104,13 +104,14 @@ class OllamaService:
                     "options": {
                         "temperature": 0.7,
                         "num_ctx": 1500,
-                        "num_predict": 384
+                        "num_predict": 384,
+                        "num_thread": 2
                     }
                 }
                 
                 # Optimize Ollama CPU priority on Windows to prevent OS lag or crashes under heavy CPU load
                 set_ollama_priority_below_normal()
-                response = requests.post(url, json=payload, stream=True, timeout=60)
+                response = requests.post(url, json=payload, stream=True, timeout=120)
                 if response.status_code != 200:
                     raise Exception(f"Ollama returned status code {response.status_code}")
                 for line in response.iter_lines():
