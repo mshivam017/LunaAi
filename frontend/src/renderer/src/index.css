@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #030308;
+    color: #F3F4F6;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+/* Custom scrollbar to look modern and elegant */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.15);
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.4);
+}
+
+/* Custom styles for premium UI elements */
+.glass-panel {
+  background: rgba(15, 15, 30, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-heavy {
+  background: rgba(10, 10, 22, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(20, 20, 45, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(139, 92, 246, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.text-gradient-purple-blue {
+  background: linear-gradient(135deg, #A78BFA 0%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-purple-blue {
+  background: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%);
+}
+
+.glow-purple {
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
+}
+
+.glow-purple-lg {
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.25);
+}
+
+/* Skeleton Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* Custom typing indicator */
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.typing-dot {
+  animation: pulse 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}

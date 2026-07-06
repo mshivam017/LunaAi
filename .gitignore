@@ -1,0 +1,27 @@
+# Dependency Directories
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Local Databases and Process Cache
+*.db
+*.sqlite
+.luna/
+*.log
+
+# PyInstaller Compiled Outputs
+backend/build/
+backend/dist/
+*.spec
+
+# Electron/Vite Compiled Outputs
+frontend/dist/
+frontend/dist-electron/
+frontend/dist-package/
+
+# Operating System & IDE Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

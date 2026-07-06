@@ -1,0 +1,104 @@
+========================================================================
+                      LUNA AI DESKTOP ASSISTANT - USER MANUAL
+========================================================================
+Version: 1.0.0
+OS Compatibility: Windows 11 / Windows 10
+Hardware Targets: CPU-only standard consumer devices (8GB RAM, no GPU required)
+========================================================================
+
+Luna is a high-fidelity local desktop AI assistant designed for offline 
+productivity, file parsing, and Windows shell automation. Everything runs
+locally on your machine using an embedded SQLite database and local LLMs, 
+respecting your privacy and operating with low memory footprints.
+
+------------------------------------------------------------------------
+1. APPLICATION INTERFACE NAVIGATION
+------------------------------------------------------------------------
+- Custom Title Bar: The top header has custom buttons to Minimize, Maximize/Restore, 
+  and Close the frameless app interface. You can drag the window anywhere by clicking 
+  and holding the empty top header.
+- Sidebar Navigation: Access tabs on the left to switch between workspaces:
+  * [AI Chat Panel]: Local LLM completions and document parsing area.
+  * [Markdown Notes]: Foldered notes manager with autosave functionality.
+  * [SQLite Memory]: Persistently stored user facts editor.
+  * [Preferences]: Themes, assistant name config, model selectors, and memory toggle.
+  * [Permissions & Logs]: System automation permission toggles and logs terminal.
+
+------------------------------------------------------------------------
+2. GLOBAL SUMMON & FLOATING PANEL MODE
+------------------------------------------------------------------------
+- Alt+Space Shortcut: Luna registers a global keyboard shortcut. Pressing [Alt + Space] 
+  from anywhere on Windows instantly hides or shows/focuses the assistant window.
+- Floating Mode Switch: Click the [Floating Mode] toggle in the sidebar. This shrinks
+  the large window layout (1200x800) into a compact sidebar widget (380x600) and locks
+  resizable properties, ideal for keeping Luna pinned alongside other work.
+
+------------------------------------------------------------------------
+3. LOCAL AI CHAT & STREAMING FEATURES
+------------------------------------------------------------------------
+- Dynamic completions are streamed token-by-token.
+- Structured Markdown is fully supported (displays headers, bullet points, blockquotes, 
+  and tables).
+- Syntax-highlighted code blocks are styled in dark mode with a [Copy] button to clone 
+  snippets instantly.
+- Demo Mode: If Ollama is not active on your device, Luna automatically displays a yellow
+  warning banner and switches into Demo Mode. It uses an NLP generator to simulate 
+  structured streaming completions so that you can continue using and testing all features.
+
+------------------------------------------------------------------------
+4. NATIVE COMMANDS & SYSTEM AUTOMATION
+------------------------------------------------------------------------
+Luna contains a natural language intent classifier to launch native Windows 
+executables and folders:
+- Supported Open Intents: "Open VS Code", "Open Notepad", "Open Calculator", 
+  "Open Chrome", "Open Microsoft Edge", "Open File Explorer", "Open Spotify", 
+  "Open Terminal", "Open Downloads folder", "Open Desktop", "Open Documents".
+- Security Permission Gate: When you trigger a launcher command, Luna will display 
+  a security verification modal. You can choose to Allow or Deny the request.
+- Permissions Customization: Under the [Permissions & Logs] tab, you can override rules
+  globally for each launcher target:
+  * [ASK] (Default): Always displays the verification modal first.
+  * [ALLOW]: Auto-launches immediately without requesting confirmation.
+  * [DENY]: Blocks the action and logs it without execution.
+- Downloads Organizer: Say "Organize Downloads" in the chat. After permission approval,
+  Luna scans your root Downloads directory, creates category subfolders (Documents, Images,
+  Installers, Archives, Code, Audio-Video) and cleanly sorts files by their extensions.
+
+------------------------------------------------------------------------
+5. FILE PARSING & SUMMARIZATION
+------------------------------------------------------------------------
+You can drag and drop physical documents from Windows File Explorer directly into the 
+Luna AI Chat Panel, or click the [📎] paperclip attachment icon.
+- Supported Formats: PDFs (.pdf), Word Docs (.docx), Images (.png, .jpg, .webp), and 
+  raw code/text (.txt, .py, .js, .ts, .html, .css, .json, .csv).
+- Summarization trigger: Upon dropping/selecting, Luna automatically extracts text content 
+  (using an intelligent mock OCR parser for images) and pre-populates a query prompt: 
+  "Please analyze and summarize the uploaded file..." in your chat input area. Click 
+  send to generate a summary.
+
+------------------------------------------------------------------------
+6. MARKDOWN NOTEBOOK Workspace
+------------------------------------------------------------------------
+Create folders ("General", "Projects", "Ideas", "Archive") and notes under the notes tab:
+- Note list is filtered dynamically via search inputs.
+- Note Editor autosaves your inputs (title and content) directly to SQLite in the background 
+  with a debounced 800ms timer. A status check (e.g. "✓ Autosaved to database") appears 
+  in the top right of the note panel.
+
+------------------------------------------------------------------------
+7. STORED SQLite FACT DATABASE
+------------------------------------------------------------------------
+Luna builds a profile of your parameters based on onboarding inputs and chat extractions:
+- View the active list of user facts under the [SQLite Memory] tab.
+- You can manually insert new key-value facts (e.g., Coding language preference) or click 
+  [Delete] to remove specific records.
+
+------------------------------------------------------------------------
+8. FACTORY RESET & AUDITING
+------------------------------------------------------------------------
+- System Logs Terminal: The log console under the permissions workspace shows real-time 
+  warning, info, and error logs of the background server.
+- total reset: If you want to clean up your workspace, click [Factory Reset & Clear Tables] 
+  in the permissions workspace. This wipes all database tables, flushes local storage, 
+  and redirects you back to the initial Onboarding setup screens.
+========================================================================
