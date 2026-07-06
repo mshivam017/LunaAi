@@ -18,11 +18,16 @@ async function createWindow() {
     titleBarStyle: 'hidden',
     transparent: false,
     backgroundColor: '#05050A',
+    show: false, // Prevent showing a blank window before content is fully loaded
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false
     }
+  })
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow?.show()
   })
 
   // Setup custom IPC window management listeners
