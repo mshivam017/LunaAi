@@ -2,6 +2,24 @@
 
 Luna is a premium desktop AI assistant MVP built to demonstrate privacy-first local AI, desktop automation, and personalized workflows. It is optimized to run smoothly on standard consumer hardware (e.g., CPU-only Windows systems with 8GB RAM), keeping memory usage strictly under 1.5GB.
 
+---
+
+## 🎨 Application Tour
+
+| Onboarding Welcome | AI Chat Interface |
+|:---:|:---:|
+| <img src="screenshots/00_onboarding.png" width="400"> | <img src="screenshots/01_ai_chat.png" width="400"> |
+
+| Markdown Notebook | SQLite Memory |
+|:---:|:---:|
+| <img src="screenshots/02_markdown_notes.png" width="400"> | <img src="screenshots/03_sqlite_memory.png" width="400"> |
+
+| Preferences Settings | Privacy & Automation Audits |
+|:---:|:---:|
+| <img src="screenshots/04_preferences.png" width="400"> | <img src="screenshots/05_permissions_and_logs.png" width="400"> |
+
+---
+
 ### 🏛️ Core Design Principles
 *   **Local-First Architecture**: All database storage, document parsing, settings, and automation run entirely on your local machine.
 *   **Privacy-First Design**: Zero tracking, absolute user data ownership, transparent system permission audits, and offline-first database.
