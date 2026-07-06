@@ -223,14 +223,28 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const decoder = new TextDecoder()
       let fullContent = ''
 
+      let buffer = ''
       if (reader) {
         while (true) {
           const { done, value } = await reader.read()
-          if (done) break
+          if (done) {
+            // Process leftover buffer text
+            if (buffer.trim()) {
+              try {
+                const parsed = JSON.parse(buffer.trim())
+                if (parsed.type === 'content') {
+                  fullContent += parsed.text
+                }
+              } catch (e) {}
+            }
+            break
+          }
 
-          const chunkText = decoder.decode(value)
-          // Splitting lines since backend yields JSON Lines
-          const lines = chunkText.split('\n')
+          const chunkText = decoder.decode(value, { stream: true })
+          buffer += chunkText
+          const lines = buffer.split('\n')
+          // The last element is either empty (ended with \n) or the incomplete line fragment
+          buffer = lines.pop() || ''
 
           for (const line of lines) {
             if (line.trim()) {
