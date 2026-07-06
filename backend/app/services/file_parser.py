@@ -38,17 +38,20 @@ class FileParserService:
         reader = PdfReader(file_path)
         text_content = []
         
-        # Read max 10 pages for response speed and size control
-        max_pages = min(len(reader.pages), 10)
+        # Read max 3 pages for high speed and safe memory allocation on CPU
+        max_pages = min(len(reader.pages), 3)
         for i in range(max_pages):
             page_text = reader.pages[i].extract_text()
             if page_text:
                 text_content.append(f"--- Page {i+1} ---\n{page_text}")
                 
-        if len(reader.pages) > 10:
+        if len(reader.pages) > 3:
             text_content.append(f"\n... [Document truncated. Total pages: {len(reader.pages)}] ...")
             
         full_text = "\n".join(text_content).strip()
+        # Strictly truncate full text to 3,000 characters max
+        if len(full_text) > 3000:
+            full_text = full_text[:3000] + "\n... [Content truncated] ..."
         return full_text if full_text else "No extractable text found in PDF."
 
     @staticmethod

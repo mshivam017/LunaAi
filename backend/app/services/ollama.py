@@ -104,7 +104,7 @@ class OllamaService:
                     "options": {
                         "temperature": 0.7,
                         "num_ctx": 1500,
-                        "num_predict": 384,
+                        "num_predict": 200,
                         "num_thread": 2
                     }
                 }
