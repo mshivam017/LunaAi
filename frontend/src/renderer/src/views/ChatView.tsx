@@ -77,12 +77,20 @@ const MarkdownMessage: React.FC<{ text: string }> = ({ text }) => {
             {lines.map((line, lIdx) => {
               let formatted: React.ReactNode = line
               
-              if (line.startsWith('# ')) {
-                formatted = <h1 className="text-base font-bold text-white mt-3 mb-1">{parseInlineMarkdown(line.slice(2))}</h1>
-              } else if (line.startsWith('## ')) {
-                formatted = <h2 className="text-sm font-bold text-white mt-2.5 mb-1">{parseInlineMarkdown(line.slice(3))}</h2>
-              } else if (line.startsWith('### ')) {
-                formatted = <h3 className="text-xs font-bold text-white mt-2 mb-0.5">{parseInlineMarkdown(line.slice(4))}</h3>
+              const headerMatch = line.match(/^(#{1,6})\s+(.*)$/)
+              if (headerMatch) {
+                const level = headerMatch[1].length
+                const content = headerMatch[2]
+                const classes = [
+                  "text-base font-bold text-white mt-3 mb-1", // h1
+                  "text-sm font-bold text-white mt-2.5 mb-1", // h2
+                  "text-xs font-bold text-white mt-2 mb-0.5", // h3
+                  "text-xs font-bold text-purple-400 mt-2 mb-0.5", // h4
+                  "text-[10px] font-semibold text-purple-300 mt-1.5 mb-0.5 uppercase tracking-wider", // h5
+                  "text-[10px] font-semibold text-gray-300 mt-1.5 mb-0.5 uppercase tracking-wider" // h6
+                ][level - 1]
+                const Tag = `h${level}` as keyof JSX.IntrinsicElements
+                formatted = <Tag className={classes}>{parseInlineMarkdown(content)}</Tag>
               } else if (line.startsWith('- ') || line.startsWith('* ')) {
                 formatted = <span className="pl-3 block relative before:content-['•'] before:absolute before:left-0 before:text-purple-400">{parseInlineMarkdown(line.slice(2))}</span>
               } else if (line.startsWith('> ')) {
