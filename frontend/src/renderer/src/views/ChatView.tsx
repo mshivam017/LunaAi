@@ -113,6 +113,7 @@ const MarkdownMessage: React.FC<{ text: string }> = ({ text }) => {
 }
 
 const UserMessageContent: React.FC<{ content: string }> = ({ content }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
   const parsedIndex = content.indexOf('[Parsed Contents]')
   
   if (parsedIndex === -1) {
@@ -128,8 +129,6 @@ const UserMessageContent: React.FC<{ content: string }> = ({ content }) => {
   
   // Clean prompt instructions
   const cleanPrompt = mainText.replace(/Please analyze and summarize the uploaded file "[^"]+":\s*/, '').trim()
-  
-  const [isExpanded, setIsExpanded] = useState(false)
   
   return (
     <div className="space-y-3 font-sans max-w-lg">
