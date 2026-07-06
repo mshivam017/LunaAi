@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useChatStore } from '../stores/useChatStore'
 import { useUIStore } from '../stores/useUIStore'
-import { Moon, UploadCloud, AlertTriangle, Paperclip, Send, Trash2, Plus } from 'lucide-react'
+import { Moon, UploadCloud, AlertTriangle, Paperclip, Send, Trash2, Plus, FileText } from 'lucide-react'
 
 // Parse inline markdown elements recursively (bold **, code spans `)
 const parseInlineMarkdown = (line: string): React.ReactNode => {
@@ -100,6 +100,65 @@ const MarkdownMessage: React.FC<{ text: string }> = ({ text }) => {
           </p>
         )
       })}
+    </div>
+  )
+}
+
+const UserMessageContent: React.FC<{ content: string }> = ({ content }) => {
+  const parsedIndex = content.indexOf('[Parsed Contents]')
+  
+  if (parsedIndex === -1) {
+    return <div className="whitespace-pre-wrap leading-relaxed">{content}</div>
+  }
+  
+  const mainText = content.slice(0, parsedIndex).trim()
+  const parsedText = content.slice(parsedIndex + '[Parsed Contents]'.length).trim()
+  
+  // Extract filename if possible
+  const fileMatch = mainText.match(/uploaded file "([^"]+)"/)
+  const fileName = fileMatch ? fileMatch[1] : 'Attached Document'
+  
+  // Clean prompt instructions
+  const cleanPrompt = mainText.replace(/Please analyze and summarize the uploaded file "[^"]+":\s*/, '').trim()
+  
+  const [isExpanded, setIsExpanded] = useState(false)
+  
+  return (
+    <div className="space-y-3 font-sans max-w-lg">
+      {/* Clean User Query */}
+      {cleanPrompt && (
+        <div className="whitespace-pre-wrap leading-relaxed font-semibold text-white">
+          {cleanPrompt}
+        </div>
+      )}
+      
+      {/* Premium Document Attachment Card */}
+      <div className="flex flex-col rounded-xl border border-white/5 bg-white/5 overflow-hidden max-w-sm">
+        <div className="flex items-center gap-3 p-3 bg-white/5">
+          <div className="h-9 w-9 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
+            <FileText className="h-5 w-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-gray-200 truncate">{fileName}</p>
+            <p className="text-[10px] text-gray-500 font-mono">Attachment Processed</p>
+          </div>
+        </div>
+        
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full py-1.5 px-3 bg-[#0a0a16]/40 text-[10px] font-mono text-purple-400 hover:text-purple-300 hover:bg-[#0a0a16]/80 transition-all flex items-center justify-center gap-1 border-t border-white/5"
+        >
+          {isExpanded ? 'Hide Extracted Text ▲' : 'Show Extracted Text ▼'}
+        </button>
+        
+        {/* Collapsible Extracted Content with Privacy Mask */}
+        {isExpanded && (
+          <div className="p-3 bg-black/40 text-[10px] text-gray-400 font-mono max-h-48 overflow-y-auto whitespace-pre-wrap border-t border-white/5 select-text leading-relaxed">
+            {parsedText}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -330,7 +389,7 @@ export const ChatView: React.FC = () => {
                     }`}
                   >
                     {msg.sender === 'user' ? (
-                      <div className="whitespace-pre-wrap leading-relaxed">{msg.content}</div>
+                      <UserMessageContent content={msg.content} />
                     ) : (
                       <MarkdownMessage text={msg.content} />
                     )}
