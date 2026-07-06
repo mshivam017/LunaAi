@@ -179,6 +179,7 @@ export const ChatView: React.FC = () => {
     isStreaming,
     searchQuery,
     runningMode,
+    queueStatus,
     fetchConversations,
     selectConversation,
     createConversation,
@@ -411,13 +412,18 @@ export const ChatView: React.FC = () => {
           )}
           {isStreaming && (
             <div className="flex gap-3 mr-auto items-center">
-              <div className="h-7 w-7 rounded-full bg-purple-600/10 border border-purple-500/20 flex items-center justify-center text-purple-300 text-xs font-bold">
+              <div className="h-7 w-7 rounded-full bg-purple-600/10 border border-purple-500/20 flex items-center justify-center text-purple-300 text-xs font-bold flex-shrink-0 self-start">
                 L
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl bg-[#0f0f1c]/80 border border-white/5">
-                <span className="h-1.5 w-1.5 bg-purple-400 rounded-full typing-dot"></span>
-                <span className="h-1.5 w-1.5 bg-purple-400 rounded-full typing-dot"></span>
-                <span className="h-1.5 w-1.5 bg-purple-400 rounded-full typing-dot"></span>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl bg-[#0f0f1c]/80 border border-white/5 w-fit">
+                  <span className="h-1.5 w-1.5 bg-purple-400 rounded-full typing-dot"></span>
+                  <span className="h-1.5 w-1.5 bg-purple-400 rounded-full typing-dot"></span>
+                  <span className="h-1.5 w-1.5 bg-purple-400 rounded-full typing-dot"></span>
+                </div>
+                <span className="text-[8px] text-gray-500 font-mono pl-1 leading-none">
+                  {queueStatus === 'queued' ? 'Waiting in queue (Luna is busy)...' : 'Luna is analyzing...'}
+                </span>
               </div>
             </div>
           )}

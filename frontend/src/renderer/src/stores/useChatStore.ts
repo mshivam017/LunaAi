@@ -33,6 +33,7 @@ interface ChatState {
   searchQuery: string
   runningMode: 'local' | 'demo'
   pendingAutomation: PendingAutomation | null
+  queueStatus: 'idle' | 'queued' | 'processing'
 
   fetchConversations: () => Promise<void>
   selectConversation: (id: string) => Promise<void>
@@ -56,6 +57,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   searchQuery: '',
   runningMode: 'local',
   pendingAutomation: null,
+  queueStatus: 'idle',
 
   fetchConversations: async () => {
     set({ isFetchingConversations: true })
@@ -252,7 +254,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 const parsed = JSON.parse(line.trim())
                 
                 if (parsed.type === 'metadata') {
-                  set({ runningMode: parsed.mode })
+                  if (parsed.mode) {
+                    set({ runningMode: parsed.mode })
+                  }
+                  if (parsed.status) {
+                    set({ queueStatus: parsed.status })
+                  }
                 } else if (parsed.type === 'content') {
                   fullContent += parsed.text
                   
@@ -283,7 +290,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         )
       }))
     } finally {
-      set({ isStreaming: false })
+      set({ isStreaming: false, queueStatus: 'idle' })
       get().fetchConversations() // reload list to show updated title / time
     }
   },

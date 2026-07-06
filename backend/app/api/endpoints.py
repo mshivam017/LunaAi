@@ -15,6 +15,10 @@ from app.services.ollama import OllamaService
 from app.services.file_parser import FileParserService
 from app.automation.engine import AutomationEngine
 
+import threading
+
+llm_lock = threading.Lock()
+
 router = APIRouter()
 
 # --- Conversation Endpoints ---
@@ -331,40 +335,47 @@ def chat_stream(item: schemas.MessageCreate, db: Session = Depends(get_db)):
 
     # Generator wrapper to capture and commit the assistant's reply once streaming is complete
     def event_generator():
-        full_assistant_reply = ""
-        running_mode = "normal"
+        # Yield initial queued status message
+        yield json.dumps({"type": "metadata", "status": "queued"}) + "\n"
         
-        # Read the stream generator
-        for chunk in OllamaService.stream_chat(ollama_messages):
-            data = json.loads(chunk.strip())
+        with llm_lock:
+            # Yield processing status message once lock is acquired
+            yield json.dumps({"type": "metadata", "status": "processing"}) + "\n"
             
-            # Check metadata header to detect running mode
-            if data.get("type") == "metadata":
-                if data.get("mode") == "demo":
-                    running_mode = "demo"
-                yield chunk
-                continue
-                
-            if data.get("type") == "content":
-                text = data.get("text", "")
-                full_assistant_reply += text
-                yield chunk
-        
-        # Save assistant message into SQLite once completion stream finishes
-        if full_assistant_reply.strip():
-            db_msg_assistant = models.Message(
-                conversation_id=item.conversation_id,
-                sender="luna",
-                content=full_assistant_reply,
-                running_mode=running_mode
-            )
-            db.add(db_msg_assistant)
+            full_assistant_reply = ""
+            running_mode = "normal"
             
-            # Update conversation timestamp
-            db_conv = db.query(models.Conversation).filter(models.Conversation.id == item.conversation_id).first()
-            if db_conv:
-                db_conv.updated_at = func.now()
+            # Read the stream generator
+            for chunk in OllamaService.stream_chat(ollama_messages):
+                data = json.loads(chunk.strip())
                 
-            db.commit()
+                # Check metadata header to detect running mode
+                if data.get("type") == "metadata":
+                    if data.get("mode") == "demo":
+                        running_mode = "demo"
+                    yield chunk
+                    continue
+                    
+                if data.get("type") == "content":
+                    text = data.get("text", "")
+                    full_assistant_reply += text
+                    yield chunk
+            
+            # Save assistant message into SQLite once completion stream finishes
+            if full_assistant_reply.strip():
+                db_msg_assistant = models.Message(
+                    conversation_id=item.conversation_id,
+                    sender="luna",
+                    content=full_assistant_reply,
+                    running_mode=running_mode
+                )
+                db.add(db_msg_assistant)
+                
+                # Update conversation timestamp
+                db_conv = db.query(models.Conversation).filter(models.Conversation.id == item.conversation_id).first()
+                if db_conv:
+                    db_conv.updated_at = func.now()
+                    
+                db.commit()
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
