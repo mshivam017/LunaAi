@@ -2,8 +2,57 @@ import requests
 import json
 import time
 import random
+import sys
+import ctypes
 from typing import Generator, List, Dict
 from app.core.config import settings
+
+def set_ollama_priority_below_normal():
+    if sys.platform != "win32":
+        return
+    try:
+        PROCESS_QUERY_INFORMATION = 0x0400
+        PROCESS_SET_INFORMATION = 0x0200
+        TH32CS_SNAPPROCESS = 0x00000002
+        BELOW_NORMAL_PRIORITY_CLASS = 0x00004000
+
+        class PROCESSENTRY32(ctypes.Structure):
+            _fields_ = [
+                ("dwSize", ctypes.c_ulong),
+                ("cntUsage", ctypes.c_ulong),
+                ("th32ProcessID", ctypes.c_ulong),
+                ("th32DefaultHeapID", ctypes.c_void_p),
+                ("th32ModuleID", ctypes.c_ulong),
+                ("cntThreads", ctypes.c_ulong),
+                ("th32ParentProcessID", ctypes.c_ulong),
+                ("pcPriClassBase", ctypes.c_long),
+                ("dwFlags", ctypes.c_ulong),
+                ("szExeFile", ctypes.c_char * 260)
+            ]
+
+        kernel32 = ctypes.windll.kernel32
+        hSnapshot = kernel32.CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+        if hSnapshot == -1:
+            return
+
+        pe = PROCESSENTRY32()
+        pe.dwSize = ctypes.sizeof(PROCESSENTRY32)
+
+        if kernel32.Process32First(hSnapshot, ctypes.byref(pe)):
+            while True:
+                exe_name = pe.szExeFile.decode('utf-8', errors='ignore').lower()
+                if "ollama" in exe_name:
+                    pid = pe.th32ProcessID
+                    hProcess = kernel32.OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_SET_INFORMATION, False, pid)
+                    if hProcess:
+                        kernel32.SetPriorityClass(hProcess, BELOW_NORMAL_PRIORITY_CLASS)
+                        kernel32.CloseHandle(hProcess)
+                if not kernel32.Process32Next(hSnapshot, ctypes.byref(pe)):
+                    break
+        kernel32.CloseHandle(hSnapshot)
+        print("Successfully set active Ollama runner processes to BELOW NORMAL CPU priority")
+    except Exception as e:
+        print(f"Failed to optimize Ollama processes priority: {e}")
 
 class OllamaService:
     @staticmethod
@@ -55,6 +104,8 @@ class OllamaService:
                     }
                 }
                 
+                # Optimize Ollama CPU priority on Windows to prevent OS lag or crashes under heavy CPU load
+                set_ollama_priority_below_normal()
                 response = requests.post(url, json=payload, stream=True, timeout=60)
                 for line in response.iter_lines():
                     if line:
