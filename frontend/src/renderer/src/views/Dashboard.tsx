@@ -9,11 +9,13 @@ import { PrivacyView } from './PrivacyView'
 import { ToastContainer } from '../components/ToastContainer'
 import { PermissionModal } from '../components/PermissionModal'
 import { useChatStore } from '../stores/useChatStore'
+import { useSettingsStore } from '../stores/useSettingsStore'
 import { MessageSquare, FileText, Brain, Settings as SettingsIcon, Shield, Moon } from 'lucide-react'
 
 export const Dashboard: React.FC = () => {
   const { activeTab, setActiveTab, isFloating, toggleFloating } = useUIStore()
   const runningMode = useChatStore(state => state.runningMode)
+  const selectedModel = useSettingsStore(state => state.selectedModel)
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#030308] select-none text-white border border-white/5 rounded-2xl relative">
@@ -86,7 +88,7 @@ export const Dashboard: React.FC = () => {
                   {runningMode === 'demo' ? 'Demo Mode' : 'Local AI Active'}
                 </p>
                 <p className="text-[8px] text-gray-500 truncate mt-0.5 font-mono">
-                  {runningMode === 'demo' ? 'Mock Streaming' : 'Qwen2.5:3B'}
+                  {runningMode === 'demo' ? 'Mock Streaming' : selectedModel}
                 </p>
               </div>
             </div>

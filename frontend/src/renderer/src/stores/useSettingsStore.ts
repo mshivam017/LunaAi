@@ -26,7 +26,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   assistantName: 'Luna',
   theme: 'dark',
   language: 'en',
-  selectedModel: 'qwen2.5:3b',
+  selectedModel: 'qwen2.5:0.5b',
   responseStyle: 'professional',
   memoryEnabled: true,
   isLoading: false,

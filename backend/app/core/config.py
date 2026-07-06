@@ -11,7 +11,7 @@ class Settings:
     
     # AI settings
     OLLAMA_BASE_URL: str = "http://localhost:11434"
-    DEFAULT_MODEL: str = "qwen2.5:3b"
+    DEFAULT_MODEL: str = "qwen2.5:0.5b"
     FALLBACK_MODEL: str = "phi3"
 
 settings = Settings()

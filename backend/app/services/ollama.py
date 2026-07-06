@@ -213,7 +213,7 @@ class OllamaService:
                 "I am running in **Demo Mode** since I couldn't find a running instance of **Ollama** (`localhost:11434`) on your device.\n\n"
                 "Even in Demo Mode, I am simulating full conversation and markdown formatting. Here is your query breakdown:\n\n"
                 f"> **Query Recieved**: \"{messages[-1]['content']}\"\n\n"
-                "Once Ollama is installed and running, I will automatically connect to your local `Qwen2.5:3B` model for custom responses. "
+                "Once Ollama is installed and running, I will automatically connect to your preferred local Qwen2.5 model for custom responses. "
                 "You can configure settings, write notes, use local memory, and test desktop automations (e.g., try writing *'Open Notepad'*) right now!"
             )
 

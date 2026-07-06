@@ -83,8 +83,9 @@ export const SettingsView: React.FC = () => {
                 onChange={(e) => handleUpdate('selectedModel', e.target.value)}
                 className="w-full bg-white/5 border border-white/5 focus:border-purple-500/30 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none transition-all"
               >
-                <option value="qwen2.5:3b" className="bg-[#0b0a16]">Qwen 2.5 (3B) [Recommended]</option>
-                <option value="phi3" className="bg-[#0b0a16]">Phi-3 Mini (3.8B)</option>
+                <option value="qwen2.5:0.5b" className="bg-[#0b0a16]">Qwen 2.5 (0.5B) [Ultra-Lightweight]</option>
+                <option value="qwen2.5:1.5b" className="bg-[#0b0a16]">Qwen 2.5 (1.5B) [Standard]</option>
+                <option value="qwen2.5:3b" className="bg-[#0b0a16]">Qwen 2.5 (3B) [High Load]</option>
               </select>
             </div>
 
