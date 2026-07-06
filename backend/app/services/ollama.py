@@ -102,7 +102,9 @@ class OllamaService:
                     "messages": messages,
                     "stream": True,
                     "options": {
-                        "temperature": 0.7
+                        "temperature": 0.7,
+                        "num_ctx": 1500,
+                        "num_predict": 384
                     }
                 }
                 

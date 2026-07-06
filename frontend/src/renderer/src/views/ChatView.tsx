@@ -188,7 +188,7 @@ export const ChatView: React.FC = () => {
       if (res.ok) {
         const data = await res.json()
         if (data.success) {
-          setInput(`Please analyze and summarize the uploaded file "${file.name}":\n\n[Parsed Contents]\n${data.content.slice(0, 4000)}`)
+          setInput(`Please analyze and summarize the uploaded file "${file.name}":\n\n[Parsed Contents]\n${data.content.slice(0, 1500)}`)
           addToast(`Document content extracted successfully!`, 'success')
         } else {
           addToast(`Upload failed: ${data.message}`, 'error')
