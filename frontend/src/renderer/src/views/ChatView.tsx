@@ -112,8 +112,13 @@ const MarkdownMessage: React.FC<{ text: string }> = ({ text }) => {
   )
 }
 
-const UserMessageContent: React.FC<{ content: string }> = ({ content }) => {
+const UserMessageContent: React.FC<{ content: any }> = ({ content }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  
+  if (typeof content !== 'string') {
+    return <div className="whitespace-pre-wrap leading-relaxed">{String(content || '')}</div>
+  }
+  
   const parsedIndex = content.indexOf('[Parsed Contents]')
   
   if (parsedIndex === -1) {
@@ -128,7 +133,10 @@ const UserMessageContent: React.FC<{ content: string }> = ({ content }) => {
   const fileName = fileMatch ? fileMatch[1] : 'Attached Document'
   
   // Clean prompt instructions
-  const cleanPrompt = mainText.replace(/Please analyze and summarize the uploaded file "[^"]+":\s*/, '').trim()
+  const cleanPrompt = mainText
+    .replace(/^Please analyze and summarize the uploaded file "[^"]+":\s*/, '')
+    .replace(/^Summarize the uploaded file "[^"]+" in 2-3 bullet points. Keep it extremely short and concise:\s*/, '')
+    .trim()
   
   return (
     <div className="space-y-3 font-sans max-w-lg">
