@@ -38,8 +38,10 @@ const parseInlineMarkdown = (line: string): React.ReactNode => {
 }
 
 // Custom Markdown + Code-block formatter for premium chat UI
-const MarkdownMessage: React.FC<{ text: string }> = ({ text }) => {
-  if (!text) return null
+const MarkdownMessage: React.FC<{ text: any }> = ({ text }) => {
+  if (typeof text !== 'string') {
+    return <div className="whitespace-pre-wrap leading-relaxed">{String(text || '')}</div>
+  }
   
   // Format code blocks
   const parts = text.split(/(```[\s\S]*?```)/g)
@@ -379,6 +381,7 @@ export const ChatView: React.FC = () => {
             </div>
           ) : (
             messages.map((msg) => {
+              if (!msg) return null
               if (msg.sender === 'luna' && !msg.content) return null
               return (
                 <div
